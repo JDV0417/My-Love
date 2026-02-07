@@ -17,7 +17,7 @@
             --env-height: 280px;
         }
 
-        /* MOBILE OVERRIDES (For screens smaller than 480px) */
+        /* MOBILE OPTIMIZATION */
         @media (max-width: 480px) {
             :root {
                 --env-width: 300px;
@@ -28,7 +28,7 @@
                 height: 480px !important;
             }
             .letter-content {
-                font-size: 1.2rem !important; /* Slightly smaller text for mobile */
+                font-size: 1.2rem !important;
             }
             .greeting { font-size: 1.4rem !important; }
         }
@@ -42,7 +42,6 @@
             margin: 0;
             font-family: 'Playfair Display', serif;
             overflow-x: hidden;
-            overflow-y: auto; 
         }
 
         #start-link {
@@ -152,7 +151,7 @@
             align-items: center;
         }
 
-        .nav-arrow, .view-all-btn {
+        .nav-arrow, .view-all-btn, .reset-btn {
             font-family: sans-serif;
             font-size: 0.65rem;
             font-weight: bold;
@@ -160,10 +159,11 @@
             color: var(--envelope-dark);
             cursor: pointer;
             padding: 10px 5px;
+            transition: 0.3s;
         }
 
-        /* Full View Mode */
-        .full-view .envelope-wrapper { margin-top: 10px; height: auto; }
+        /* FULL VIEW MODE */
+        .full-view .envelope-wrapper { margin-top: 20px; height: auto; align-items: flex-start; }
         .full-view .envelope { display: none; }
         .full-view .letter-container {
             position: relative;
@@ -185,6 +185,9 @@
             min-height: 350px;
         }
         .full-view .nav-controls { display: none; }
+        .full-view .reset-container { display: flex !important; justify-content: center; width: 100%; padding: 20px 0 50px; }
+
+        .reset-container { display: none; }
 
         .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 0; }
         .envelope-wrapper.open .envelope { z-index: 10; transform: scale(0.9); opacity: 0.1; filter: blur(2px); }
@@ -256,6 +259,10 @@
                     <div class="view-all-btn" onclick="viewAll()">Full Letter 📜</div>
                 </div>
             </div>
+
+            <div class="reset-container">
+                <div class="reset-btn" onclick="resetLetter()">⬅ Back to Envelope</div>
+            </div>
         </div>
     </div>
 
@@ -288,7 +295,17 @@
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        function resetLetter() {
+            // Remove full view
+            envelopeWrapper.classList.remove('full-view');
+            // Close envelope
+            envelopeWrapper.classList.remove('open');
+            // Reset to page 1
+            changePage(1);
+            // Smooth scroll back to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
-

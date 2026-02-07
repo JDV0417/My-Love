@@ -17,6 +17,22 @@
             --env-height: 280px;
         }
 
+        /* MOBILE OVERRIDES (For screens smaller than 480px) */
+        @media (max-width: 480px) {
+            :root {
+                --env-width: 300px;
+                --env-height: 200px;
+            }
+            .letter-container {
+                width: 280px !important;
+                height: 480px !important;
+            }
+            .letter-content {
+                font-size: 1.2rem !important; /* Slightly smaller text for mobile */
+            }
+            .greeting { font-size: 1.4rem !important; }
+        }
+
         body {
             background-color: var(--bg-color);
             display: flex;
@@ -25,7 +41,6 @@
             min-height: 100vh;
             margin: 0;
             font-family: 'Playfair Display', serif;
-            /* Allow scrolling only when in full view */
             overflow-x: hidden;
             overflow-y: auto; 
         }
@@ -71,7 +86,7 @@
             top: 0; left: 0; z-index: 12;
             border-left: calc(var(--env-width) / 2) solid transparent;
             border-right: calc(var(--env-width) / 2) solid transparent;
-            border-top: 160px solid var(--envelope-dark);
+            border-top: calc(var(--env-height) * 0.57) solid var(--envelope-dark);
             transform-origin: top;
             transition: transform 0.7s ease-in-out;
         }
@@ -82,8 +97,8 @@
             bottom: 0; left: 0; z-index: 11;
             border-left: calc(var(--env-width) / 2) solid var(--envelope-color);
             border-right: calc(var(--env-width) / 2) solid var(--envelope-color);
-            border-bottom: 120px solid var(--envelope-color);
-            border-top: 150px solid transparent;
+            border-bottom: calc(var(--env-height) * 0.43) solid var(--envelope-color);
+            border-top: calc(var(--env-height) * 0.53) solid transparent;
         }
 
         .letter-container {
@@ -102,7 +117,7 @@
             width: 100%;
             height: 100%;
             background: var(--letter-color);
-            padding: 45px 35px;
+            padding: 40px 25px;
             box-sizing: border-box;
             border: 1px solid var(--paper-shadow);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
@@ -124,11 +139,11 @@
             font-family: 'Dancing Script', cursive;
             font-size: 1.45rem;
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
-        .greeting { display: block; font-size: 1.7rem; margin-bottom: 15px; }
-        .closing { display: block; text-align: right; margin-top: 25px; }
+        .greeting { display: block; font-size: 1.7rem; margin-bottom: 10px; }
+        .closing { display: block; text-align: right; margin-top: 15px; }
 
         .nav-controls {
             margin-top: auto;
@@ -139,19 +154,16 @@
 
         .nav-arrow, .view-all-btn {
             font-family: sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: bold;
             text-transform: uppercase;
             color: var(--envelope-dark);
             cursor: pointer;
-            transition: 0.3s;
-            padding: 5px;
+            padding: 10px 5px;
         }
 
-        .nav-arrow:hover, .view-all-btn:hover { letter-spacing: 1px; color: black; }
-
-        /* FULL VIEW STYLES */
-        .full-view .envelope-wrapper { margin-top: 50px; height: auto; align-items: flex-start; }
+        /* Full View Mode */
+        .full-view .envelope-wrapper { margin-top: 20px; height: auto; }
         .full-view .envelope { display: none; }
         .full-view .letter-container {
             position: relative;
@@ -161,8 +173,8 @@
             pointer-events: auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            padding-bottom: 50px;
+            gap: 15px;
+            padding: 20px 0;
         }
         .full-view .letter-page {
             position: relative;
@@ -170,26 +182,24 @@
             transform: none;
             pointer-events: auto;
             height: auto;
-            min-height: 400px;
+            min-height: 350px;
         }
         .full-view .nav-controls { display: none; }
 
-        /* States */
         .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 0; }
-        .envelope-wrapper.open .envelope { z-index: 10; transform: scale(0.9); opacity: 0.2; filter: blur(2px); }
+        .envelope-wrapper.open .envelope { z-index: 10; transform: scale(0.9); opacity: 0.1; filter: blur(2px); }
         .envelope-wrapper.open .letter-container { 
             z-index: 50; 
             opacity: 1; 
-            transform: translateY(0) scale(1.1); 
+            transform: translateY(0) scale(1); 
             pointer-events: auto;
         }
 
         .click-me {
             position: absolute;
             top: 60%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 15; color: white; font-style: italic; pointer-events: none;
+            z-index: 15; color: white; font-style: italic; font-size: 0.8rem;
         }
-        .envelope-wrapper.open .click-me { display: none; }
     </style>
 </head>
 <body>
@@ -209,29 +219,29 @@
                 </div>
                 <div class="nav-controls">
                     <div></div> 
-                    <div class="nav-arrow" onclick="changePage(2)">click to next ➔</div>
+                    <div class="nav-arrow" onclick="changePage(2)">Next ➔</div>
                 </div>
             </div>
 
             <div class="letter-page" id="p2">
                 <div class="letter-content">
                     <p>I was thinking about how much has happened in just one month. Every moment we spent together or just knowing you're there has made my life so much better.</p>
-                    <p>I'm very thankful that you've come into my life love, and I'm really looking forward for us to live together and be with each other every single day. </p>
+                    <p>I'm very thankful that you've come into my life love, and I'm looking forward to living together every single day. </p>
                 </div>
                 <div class="nav-controls">
-                    <div class="nav-arrow" onclick="changePage(1)">⬅ back</div>
-                    <div class="nav-arrow" onclick="changePage(3)">click to next ➔</div>
+                    <div class="nav-arrow" onclick="changePage(1)">⬅ Back</div>
+                    <div class="nav-arrow" onclick="changePage(3)">Next ➔</div>
                 </div>
             </div>
 
             <div class="letter-page" id="p3">
                 <div class="letter-content">
-                    <p>Thank you for your patience, your kindness, and for choosing me every day. I promise to keep making you smile, I promise to not hurt you and I'll try my best not to hurt you. </p>
-                    <p>I have so many plans for us, and I can't wait to do them all with you. Especially our adventures together, you know what I mean.</p>
+                    <p>Thank you for your patience, your kindness, and for choosing me every day. I promise to keep making you smile and I'll try my best to always protect your heart.</p>
+                    <p>I have so many plans for us, especially our adventures together, you know what I mean.</p>
                 </div>
                 <div class="nav-controls">
-                    <div class="nav-arrow" onclick="changePage(2)">⬅ back</div>
-                    <div class="nav-arrow" onclick="changePage(4)">click to next ➔</div>
+                    <div class="nav-arrow" onclick="changePage(2)">⬅ Back</div>
+                    <div class="nav-arrow" onclick="changePage(4)">Next ➔</div>
                 </div>
             </div>
 
@@ -242,8 +252,8 @@
                     <span class="closing">Love, <br> Your Wife</span>
                 </div>
                 <div class="nav-controls">
-                    <div class="nav-arrow" onclick="changePage(3)">⬅ back</div>
-                    <div class="view-all-btn" onclick="viewAll()">View Full Letter 📜</div>
+                    <div class="nav-arrow" onclick="changePage(3)">⬅ Back</div>
+                    <div class="view-all-btn" onclick="viewAll()">Full Letter 📜</div>
                 </div>
             </div>
         </div>
@@ -272,13 +282,10 @@
         }
 
         function viewAll() {
-            // Adds the 'full-view' class to the container to change the layout
             envelopeWrapper.classList.add('full-view');
-            // Remove the 'active' restriction so all pages appear
             document.querySelectorAll('.letter-page').forEach(page => {
                 page.classList.add('active');
             });
-            // Scroll to the top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>

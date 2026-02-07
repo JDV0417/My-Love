@@ -17,43 +17,81 @@
             --env-height: 280px;
         }
 
-        /* MOBILE OPTIMIZATION */
         @media (max-width: 480px) {
             :root {
                 --env-width: 300px;
                 --env-height: 200px;
             }
-            .letter-container {
-                width: 280px !important;
-                height: 480px !important;
-            }
-            .letter-content {
-                font-size: 1.2rem !important;
-            }
-            .greeting { font-size: 1.4rem !important; }
+            .letter-container { width: 280px !important; height: 480px !important; }
+            .letter-content { font-size: 1.15rem !important; }
+            .photo-frame { width: 200px !important; height: 240px !important; }
+            .landing-title { font-size: 1.8rem !important; }
+            .landing-subtitle { font-size: 1.4rem !important; }
         }
 
         body {
             background-color: var(--bg-color);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             font-family: 'Playfair Display', serif;
-            overflow-x: hidden;
+        }
+
+        .landing-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+            transition: 0.5s;
+            padding: 20px;
+        }
+
+        .landing-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: var(--envelope-dark);
+            margin: 0;
+        }
+
+        .landing-subtitle {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--text-color);
+            margin: 0 0 10px 0;
+        }
+
+        .photo-frame {
+            width: 250px;
+            height: 300px;
+            background: white;
+            padding: 12px 12px 45px 12px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transform: rotate(-2deg);
+            border: 1px solid #ddd;
+        }
+
+        .photo-frame img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border: 1px solid #eee;
         }
 
         #start-link {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--envelope-dark);
             text-decoration: none;
-            padding: 12px 25px;
+            padding: 12px 28px;
             border: 2px solid var(--envelope-dark);
-            border-radius: 4px;
+            border-radius: 50px;
             cursor: pointer;
             background: white;
-            z-index: 100;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-top: 20px;
         }
 
         .hidden { display: none !important; }
@@ -65,17 +103,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all 0.5s ease;
         }
 
         .envelope {
             position: relative;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background-color: var(--envelope-color);
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             z-index: 10;
-            transition: all 0.8s ease;
             cursor: pointer;
         }
 
@@ -105,123 +140,81 @@
             width: 380px;
             height: 550px;
             z-index: 5;
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 1s ease-in-out;
             opacity: 0;
-            transform: translateY(0) scale(0.8);
-            pointer-events: none;
+            transform: scale(0.8);
         }
 
         .letter-page {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: var(--letter-color);
             padding: 40px 25px;
             box-sizing: border-box;
             border: 1px solid var(--paper-shadow);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.5s ease-in-out;
             display: flex;
             flex-direction: column;
             opacity: 0;
-            transform: translateX(30px);
             pointer-events: none;
+            transition: opacity 0.4s ease;
+            z-index: 1;
         }
 
         .letter-page.active {
             opacity: 1;
-            transform: translateX(0);
             pointer-events: auto;
+            z-index: 2;
         }
 
-        .letter-content {
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.45rem;
-            color: var(--text-color);
-            line-height: 1.5;
-        }
-
-        .greeting { display: block; font-size: 1.7rem; margin-bottom: 10px; }
+        .letter-content { font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: var(--text-color); line-height: 1.5; }
+        .greeting { display: block; font-size: 1.6rem; margin-bottom: 10px; }
         .closing { display: block; text-align: right; margin-top: 15px; }
 
-        .nav-controls {
-            margin-top: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .nav-controls { margin-top: auto; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+        .nav-arrow, .view-all-btn, .reset-btn { font-family: sans-serif; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; color: var(--envelope-dark); cursor: pointer; padding: 10px; }
 
-        .nav-arrow, .view-all-btn, .reset-btn {
-            font-family: sans-serif;
-            font-size: 0.65rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: var(--envelope-dark);
-            cursor: pointer;
-            padding: 10px 5px;
-            transition: 0.3s;
-        }
-
-        /* FULL VIEW MODE */
-        .full-view .envelope-wrapper { margin-top: 20px; height: auto; align-items: flex-start; }
+        /* FULL VIEW FIXES */
+        .full-view .envelope-wrapper { margin-top: 20px; height: auto; }
         .full-view .envelope { display: none; }
-        .full-view .letter-container {
-            position: relative;
-            height: auto;
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding: 20px 0;
-        }
-        .full-view .letter-page {
-            position: relative;
-            opacity: 1;
-            transform: none;
-            pointer-events: auto;
-            height: auto;
-            min-height: 350px;
-        }
+        .full-view .letter-container { position: relative; height: auto; opacity: 1; transform: scale(1); display: flex; flex-direction: column; gap: 15px; }
+        .full-view .letter-page { position: relative; opacity: 1; pointer-events: auto; height: auto; min-height: 350px; }
         .full-view .nav-controls { display: none; }
-        .full-view .reset-container { display: flex !important; justify-content: center; width: 100%; padding: 20px 0 50px; }
-
-        .reset-container { display: none; }
+        .full-view .reset-container { display: flex !important; justify-content: center; padding: 20px 0 60px 0; width: 100%; }
+        
+        .reset-container { display: none; pointer-events: none; }
+        .full-view .reset-container { pointer-events: auto; }
 
         .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 0; }
-        .envelope-wrapper.open .envelope { z-index: 10; transform: scale(0.9); opacity: 0.1; filter: blur(2px); }
-        .envelope-wrapper.open .letter-container { 
-            z-index: 50; 
-            opacity: 1; 
-            transform: translateY(0) scale(1); 
-            pointer-events: auto;
-        }
-
-        .click-me {
-            position: absolute;
-            top: 60%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 15; color: white; font-style: italic; font-size: 0.8rem;
-        }
+        .envelope-wrapper.open .envelope { z-index: 1; transform: scale(0.9); opacity: 0.1; filter: blur(2px); }
+        .envelope-wrapper.open .letter-container { z-index: 100; opacity: 1; transform: scale(1); pointer-events: auto; }
+        .click-me { position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); z-index: 15; color: white; font-style: italic; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <a href="#" id="start-link">Open Message ❤️</a>
+    <div id="landing-screen" class="landing-container">
+        <h1 class="landing-title">Happy 1st Monthsary Misis ko</h1>
+        <h2 class="landing-subtitle">Happy Valentines</h2>
+        <div class="photo-frame">
+            <img src="us.jpg" alt="Our Photo">
+        </div>
+        <a href="#" id="start-link">Open Message ❤️</a>
+    </div>
 
     <div id="envelope-container" class="envelope-wrapper hidden">
         <div class="envelope" id="envelope">
             <div class="click-me">Click to open</div>
         </div>
         
-        <div class="letter-container" id="letter-container">
+        <div id="letter-container" class="letter-container">
             <div class="letter-page active" id="p1">
                 <div class="letter-content">
                     <span class="greeting">Dear Misis ko,</span>
                     <p>Happy 1st Monthsary and Happy Valentines to you my love! I hope this letter made this day extra special since we're not together today.</p>
                 </div>
                 <div class="nav-controls">
-                    <div></div> 
+                    <div></div>
                     <div class="nav-arrow" onclick="changePage(2)">Next ➔</div>
                 </div>
             </div>
@@ -260,7 +253,7 @@
                 </div>
             </div>
 
-            <div class="reset-container">
+            <div class="reset-container" id="reset-box">
                 <div class="reset-btn" onclick="resetLetter()">⬅ Back to Envelope</div>
             </div>
         </div>
@@ -268,12 +261,13 @@
 
     <script>
         const startLink = document.getElementById('start-link');
+        const landingScreen = document.getElementById('landing-screen');
         const envelopeWrapper = document.getElementById('envelope-container');
         const envelope = document.getElementById('envelope');
 
         startLink.addEventListener('click', (e) => {
             e.preventDefault();
-            startLink.classList.add('hidden');
+            landingScreen.classList.add('hidden');
             envelopeWrapper.classList.remove('hidden');
         });
 
@@ -282,28 +276,28 @@
         });
 
         function changePage(pageNum) {
-            document.querySelectorAll('.letter-page').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById('p' + pageNum).classList.add('active');
+            // Remove active class from all pages
+            const pages = document.querySelectorAll('.letter-page');
+            pages.forEach(p => p.classList.remove('active'));
+            
+            // Activate the specific page
+            const target = document.getElementById('p' + pageNum);
+            if(target) target.classList.add('active');
         }
 
         function viewAll() {
             envelopeWrapper.classList.add('full-view');
-            document.querySelectorAll('.letter-page').forEach(page => {
-                page.classList.add('active');
-            });
+            // Ensure all pages are visible in full view
+            document.querySelectorAll('.letter-page').forEach(p => p.classList.add('active'));
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function resetLetter() {
-            // Remove full view
             envelopeWrapper.classList.remove('full-view');
-            // Close envelope
             envelopeWrapper.classList.remove('open');
-            // Reset to page 1
-            changePage(1);
-            // Smooth scroll back to top
+            // Important: Hide other pages again except page 1
+            document.querySelectorAll('.letter-page').forEach(p => p.classList.remove('active'));
+            document.getElementById('p1').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>

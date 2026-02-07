@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Letter for My Love</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fdf2f2;
+            --envelope-color: #e63946;
+            --envelope-dark: #b91d2a;
+            --letter-color: #fcfaf2; 
+            --paper-shadow: #e2d1af;
+            --text-color: #3d2b1f;
+            --env-width: 420px;
+            --env-height: 280px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            /* Allow scrolling only when in full view */
+            overflow-x: hidden;
+            overflow-y: auto; 
+        }
+
+        #start-link {
+            font-size: 1.5rem;
+            color: var(--envelope-dark);
+            text-decoration: none;
+            padding: 12px 25px;
+            border: 2px solid var(--envelope-dark);
+            border-radius: 4px;
+            cursor: pointer;
+            background: white;
+            z-index: 100;
+        }
+
+        .hidden { display: none !important; }
+
+        .envelope-wrapper {
+            position: relative;
+            width: var(--env-width);
+            height: var(--env-height);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s ease;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: var(--envelope-color);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 10;
+            transition: all 0.8s ease;
+            cursor: pointer;
+        }
+
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; z-index: 12;
+            border-left: calc(var(--env-width) / 2) solid transparent;
+            border-right: calc(var(--env-width) / 2) solid transparent;
+            border-top: 160px solid var(--envelope-dark);
+            transform-origin: top;
+            transition: transform 0.7s ease-in-out;
+        }
+
+        .envelope::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 0; z-index: 11;
+            border-left: calc(var(--env-width) / 2) solid var(--envelope-color);
+            border-right: calc(var(--env-width) / 2) solid var(--envelope-color);
+            border-bottom: 120px solid var(--envelope-color);
+            border-top: 150px solid transparent;
+        }
+
+        .letter-container {
+            position: absolute;
+            width: 380px;
+            height: 550px;
+            z-index: 5;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(0) scale(0.8);
+            pointer-events: none;
+        }
+
+        .letter-page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--letter-color);
+            padding: 45px 35px;
+            box-sizing: border-box;
+            border: 1px solid var(--paper-shadow);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(30px);
+            pointer-events: none;
+        }
+
+        .letter-page.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .letter-content {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.45rem;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .greeting { display: block; font-size: 1.7rem; margin-bottom: 15px; }
+        .closing { display: block; text-align: right; margin-top: 25px; }
+
+        .nav-controls {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-arrow, .view-all-btn {
+            font-family: sans-serif;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--envelope-dark);
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 5px;
+        }
+
+        .nav-arrow:hover, .view-all-btn:hover { letter-spacing: 1px; color: black; }
+
+        /* FULL VIEW STYLES */
+        .full-view .envelope-wrapper { margin-top: 50px; height: auto; align-items: flex-start; }
+        .full-view .envelope { display: none; }
+        .full-view .letter-container {
+            position: relative;
+            height: auto;
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-bottom: 50px;
+        }
+        .full-view .letter-page {
+            position: relative;
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+            height: auto;
+            min-height: 400px;
+        }
+        .full-view .nav-controls { display: none; }
+
+        /* States */
+        .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 0; }
+        .envelope-wrapper.open .envelope { z-index: 10; transform: scale(0.9); opacity: 0.2; filter: blur(2px); }
+        .envelope-wrapper.open .letter-container { 
+            z-index: 50; 
+            opacity: 1; 
+            transform: translateY(0) scale(1.1); 
+            pointer-events: auto;
+        }
+
+        .click-me {
+            position: absolute;
+            top: 60%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 15; color: white; font-style: italic; pointer-events: none;
+        }
+        .envelope-wrapper.open .click-me { display: none; }
+    </style>
+</head>
+<body>
+
+    <a href="#" id="start-link">Open Message ❤️</a>
+
+    <div id="envelope-container" class="envelope-wrapper hidden">
+        <div class="envelope" id="envelope">
+            <div class="click-me">Click to open</div>
+        </div>
+        
+        <div class="letter-container" id="letter-container">
+            <div class="letter-page active" id="p1">
+                <div class="letter-content">
+                    <span class="greeting">Dear Misis ko,</span>
+                    <p>Happy 1st Monthsary and Happy Valentines to you my love! I hope this letter made this day extra special since we're not together today.</p>
+                </div>
+                <div class="nav-controls">
+                    <div></div> 
+                    <div class="nav-arrow" onclick="changePage(2)">click to next ➔</div>
+                </div>
+            </div>
+
+            <div class="letter-page" id="p2">
+                <div class="letter-content">
+                    <p>I was thinking about how much has happened in just one month. Every moment we spent together or just knowing you're there has made my life so much better.</p>
+                    <p>I'm very thankful that you've come into my life love, and I'm really looking forward for us to live together and be with each other every single day. </p>
+                </div>
+                <div class="nav-controls">
+                    <div class="nav-arrow" onclick="changePage(1)">⬅ back</div>
+                    <div class="nav-arrow" onclick="changePage(3)">click to next ➔</div>
+                </div>
+            </div>
+
+            <div class="letter-page" id="p3">
+                <div class="letter-content">
+                    <p>Thank you for your patience, your kindness, and for choosing me every day. I promise to keep making you smile, I promise to not hurt you and I'll try my best not to hurt you. </p>
+                    <p>I have so many plans for us, and I can't wait to do them all with you. Especially our adventures together, you know what I mean.</p>
+                </div>
+                <div class="nav-controls">
+                    <div class="nav-arrow" onclick="changePage(2)">⬅ back</div>
+                    <div class="nav-arrow" onclick="changePage(4)">click to next ➔</div>
+                </div>
+            </div>
+
+            <div class="letter-page" id="p4">
+                <div class="letter-content">
+                    <p>Happy Valentines again, my beautiful Misis. Enjoy your day and know that you are loved beyond measure.</p>
+                    <p>I love you so much, always and forever.</p>
+                    <span class="closing">Love, <br> Your Wife</span>
+                </div>
+                <div class="nav-controls">
+                    <div class="nav-arrow" onclick="changePage(3)">⬅ back</div>
+                    <div class="view-all-btn" onclick="viewAll()">View Full Letter 📜</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const startLink = document.getElementById('start-link');
+        const envelopeWrapper = document.getElementById('envelope-container');
+        const envelope = document.getElementById('envelope');
+
+        startLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            startLink.classList.add('hidden');
+            envelopeWrapper.classList.remove('hidden');
+        });
+
+        envelope.addEventListener('click', () => {
+            envelopeWrapper.classList.add('open');
+        });
+
+        function changePage(pageNum) {
+            document.querySelectorAll('.letter-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById('p' + pageNum).classList.add('active');
+        }
+
+        function viewAll() {
+            // Adds the 'full-view' class to the container to change the layout
+            envelopeWrapper.classList.add('full-view');
+            // Remove the 'active' restriction so all pages appear
+            document.querySelectorAll('.letter-page').forEach(page => {
+                page.classList.add('active');
+            });
+            // Scroll to the top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

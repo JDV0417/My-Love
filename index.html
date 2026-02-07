@@ -24,7 +24,8 @@
             }
             .letter-container { width: 280px !important; height: 480px !important; }
             .letter-content { font-size: 1.15rem !important; }
-            .photo-frame { width: 200px !important; height: 240px !important; }
+            .photo-frame { width: 200px !important; height: 260px !important; }
+            .photo-frame img { height: 180px !important; }
             .landing-title { font-size: 1.8rem !important; }
             .landing-subtitle { font-size: 1.4rem !important; }
         }
@@ -38,49 +39,42 @@
             min-height: 100vh;
             margin: 0;
             font-family: 'Playfair Display', serif;
+            overflow-x: hidden;
         }
 
+        /* LANDING PAGE */
         .landing-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 15px;
-            transition: 0.5s;
+            gap: 10px;
             padding: 20px;
         }
 
-        .landing-title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.2rem;
-            color: var(--envelope-dark);
-            margin: 0;
-        }
+        .landing-title { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: var(--envelope-dark); margin: 0; }
+        .landing-subtitle { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: var(--text-color); margin: 0 0 5px 0; }
 
-        .landing-subtitle {
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.8rem;
-            color: var(--text-color);
-            margin: 0 0 10px 0;
-        }
-
+        /* POLAROID FRAME */
         .photo-frame {
-            width: 250px;
-            height: 300px;
+            width: 240px;
+            height: 310px;
             background: white;
-            padding: 12px 12px 45px 12px;
+            padding: 12px 12px 0px 12px;
             box-shadow: 0 15px 30px rgba(0,0,0,0.15);
             transform: rotate(-2deg);
             border: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            margin-bottom: 20px;
         }
 
-        .photo-frame img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            border: 1px solid #eee;
-        }
+        .photo-frame img { width: 100%; height: 220px; object-fit: cover; border: 1px solid #eee; }
+        .photo-date { font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: #555; margin-top: 12px; }
 
-        #start-link {
+        #start-link, .back-to-start-btn {
             font-size: 1.2rem;
             color: var(--envelope-dark);
             text-decoration: none;
@@ -92,9 +86,28 @@
             font-weight: bold;
             transition: 0.3s;
             margin-top: 20px;
+            display: inline-block;
         }
 
+        .back-to-start-btn {
+            font-size: 0.8rem;
+            padding: 8px 20px;
+            margin-top: 30px;
+            opacity: 0.8;
+            z-index: 200; /* Ensure it stays on top */
+        }
+
+        .back-to-start-btn:hover { opacity: 1; background: #fce4e4; }
+
         .hidden { display: none !important; }
+
+        /* ENVELOPE AREA */
+        .envelope-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: 0.5s;
+        }
 
         .envelope-wrapper {
             position: relative;
@@ -143,12 +156,12 @@
             transition: all 1s ease-in-out;
             opacity: 0;
             transform: scale(0.8);
+            pointer-events: none;
         }
 
         .letter-page {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: var(--letter-color);
             padding: 40px 25px;
             box-sizing: border-box;
@@ -161,33 +174,34 @@
             z-index: 1;
         }
 
-        .letter-page.active {
-            opacity: 1;
-            pointer-events: auto;
-            z-index: 2;
-        }
-
+        .letter-page.active { opacity: 1; pointer-events: auto; z-index: 2; }
         .letter-content { font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: var(--text-color); line-height: 1.5; }
         .greeting { display: block; font-size: 1.6rem; margin-bottom: 10px; }
         .closing { display: block; text-align: right; margin-top: 15px; }
-
         .nav-controls { margin-top: auto; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
         .nav-arrow, .view-all-btn, .reset-btn { font-family: sans-serif; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; color: var(--envelope-dark); cursor: pointer; padding: 10px; }
 
-        /* FULL VIEW FIXES */
+        /* FULL VIEW */
+        .full-view .photo-frame { display: none !important; }
         .full-view .envelope-wrapper { margin-top: 20px; height: auto; }
         .full-view .envelope { display: none; }
-        .full-view .letter-container { position: relative; height: auto; opacity: 1; transform: scale(1); display: flex; flex-direction: column; gap: 15px; }
+        .full-view .letter-container { position: relative; height: auto; opacity: 1; transform: scale(1); display: flex; flex-direction: column; gap: 15px; pointer-events: auto; }
         .full-view .letter-page { position: relative; opacity: 1; pointer-events: auto; height: auto; min-height: 350px; }
         .full-view .nav-controls { display: none; }
         .full-view .reset-container { display: flex !important; justify-content: center; padding: 20px 0 60px 0; width: 100%; }
-        
-        .reset-container { display: none; pointer-events: none; }
-        .full-view .reset-container { pointer-events: auto; }
+        .full-view .back-to-start-btn { display: none !important; }
 
+        .reset-container { display: none; }
+
+        /* OPEN STATE */
         .envelope-wrapper.open .envelope::before { transform: rotateX(180deg); z-index: 0; }
         .envelope-wrapper.open .envelope { z-index: 1; transform: scale(0.9); opacity: 0.1; filter: blur(2px); }
         .envelope-wrapper.open .letter-container { z-index: 100; opacity: 1; transform: scale(1); pointer-events: auto; }
+        
+        /* Hide photo and extra back button when envelope is open */
+        .envelope-section.hide-photo .photo-frame, 
+        .envelope-section.hide-photo .back-to-start-btn { opacity: 0; pointer-events: none; visibility: hidden; }
+
         .click-me { position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); z-index: 15; color: white; font-style: italic; font-size: 0.8rem; }
     </style>
 </head>
@@ -198,104 +212,122 @@
         <h2 class="landing-subtitle">Happy Valentines</h2>
         <div class="photo-frame">
             <img src="us.jpg" alt="Our Photo">
+            <div class="photo-date">02-14-26</div>
         </div>
-        <a href="#" id="start-link">Open Message ❤️</a>
+        <a href="javascript:void(0)" id="start-link">Open Message ❤️</a>
     </div>
 
-    <div id="envelope-container" class="envelope-wrapper hidden">
-        <div class="envelope" id="envelope">
-            <div class="click-me">Click to open</div>
+    <div id="envelope-section" class="envelope-section hidden">
+        <div class="photo-frame" id="envelope-photo">
+            <img src="us.jpg" alt="Our Photo">
+            <div class="photo-date">02-14-26</div>
         </div>
-        
-        <div id="letter-container" class="letter-container">
-            <div class="letter-page active" id="p1">
-                <div class="letter-content">
-                    <span class="greeting">Dear Misis ko,</span>
-                    <p>Happy 1st Monthsary and Happy Valentines to you my love! I hope this letter made this day extra special since we're not together today.</p>
-                </div>
-                <div class="nav-controls">
-                    <div></div>
-                    <div class="nav-arrow" onclick="changePage(2)">Next ➔</div>
-                </div>
-            </div>
 
-            <div class="letter-page" id="p2">
-                <div class="letter-content">
-                    <p>I was thinking about how much has happened in just one month. Every moment we spent together or just knowing you're there has made my life so much better.</p>
-                    <p>I'm very thankful that you've come into my life love, and I'm looking forward to being with you every single day. </p>
-                </div>
-                <div class="nav-controls">
-                    <div class="nav-arrow" onclick="changePage(1)">⬅ Back</div>
-                    <div class="nav-arrow" onclick="changePage(3)">Next ➔</div>
-                </div>
+        <div class="envelope-wrapper" id="envelope-wrapper">
+            <div class="envelope" id="envelope">
+                <div class="click-me">Click to open</div>
             </div>
+            
+            <div id="letter-container" class="letter-container">
+                <div class="letter-page active" id="p1">
+                    <div class="letter-content">
+                        <span class="greeting">Dear Misis ko,</span>
+                        <p>Happy 1st Monthsary and Happy Valentines to you my love! I hope this letter made this day extra special since we're not together today.</p>
+                    </div>
+                    <div class="nav-controls">
+                        <div></div>
+                        <div class="nav-arrow" onclick="changePage(2)">Next ➔</div>
+                    </div>
+                </div>
 
-            <div class="letter-page" id="p3">
-                <div class="letter-content">
-                    <p>Thank you for your patience, your kindness, your understanding and for choosing me every day. I promise to keep making you smile and I'll try my best to always protect you.</p>
-                    <p>I have so many plans for us, especially our adventures together, you know what I mean.</p>
+                <div class="letter-page" id="p2">
+                    <div class="letter-content">
+                        <p>I was thinking about how much has happened in just one month. Every moment we spent together or just knowing you're there has made my life so much better.</p>
+                        <p>I'm very thankful that you've come into my life love, and I'm looking forward to living together every single day. </p>
+                    </div>
+                    <div class="nav-controls">
+                        <div class="nav-arrow" onclick="changePage(1)">⬅ Back</div>
+                        <div class="nav-arrow" onclick="changePage(3)">Next ➔</div>
+                    </div>
                 </div>
-                <div class="nav-controls">
-                    <div class="nav-arrow" onclick="changePage(2)">⬅ Back</div>
-                    <div class="nav-arrow" onclick="changePage(4)">Next ➔</div>
-                </div>
-            </div>
 
-            <div class="letter-page" id="p4">
-                <div class="letter-content">
-                    <p>Happy Valentines and Happy Monthsary again, my beautiful Misis. Enjoy your day and know that you are loved beyond measure.</p>
-                    <p>I love you so much, always and forever.</p>
-                    <span class="closing">Love, <br> Your Wife</span>
+                <div class="letter-page" id="p3">
+                    <div class="letter-content">
+                        <p>Thank you for your patience, your kindness, your understanding and for choosing me every day. I promise to keep making you smile and I'll try my best to always protect you.</p>
+                        <p>I have so many plans for us, especially our adventures together, you know what I mean.</p>
+                    </div>
+                    <div class="nav-controls">
+                        <div class="nav-arrow" onclick="changePage(2)">⬅ Back</div>
+                        <div class="nav-arrow" onclick="changePage(4)">Next ➔</div>
+                    </div>
                 </div>
-                <div class="nav-controls">
-                    <div class="nav-arrow" onclick="changePage(3)">⬅ Back</div>
-                    <div class="view-all-btn" onclick="viewAll()">Full Letter 📜</div>
-                </div>
-            </div>
 
-            <div class="reset-container" id="reset-box">
-                <div class="reset-btn" onclick="resetLetter()">⬅ Back to Envelope</div>
+                <div class="letter-page" id="p4">
+                    <div class="letter-content">
+                        <p>Happy Valentines and Happy Monthsary again, my beautiful Misis. Enjoy your day and know that you are loved beyond measure.</p>
+                        <p>I love you so much, always and forever.</p>
+                        <span class="closing">Love, <br> Your Wife</span>
+                    </div>
+                    <div class="nav-controls">
+                        <div class="nav-arrow" onclick="changePage(3)">⬅ Back</div>
+                        <div class="view-all-btn" onclick="viewAll()">Full Letter 📜</div>
+                    </div>
+                </div>
+
+                <div class="reset-container">
+                    <div class="reset-btn" onclick="resetLetter()">⬅ Back to Envelope</div>
+                </div>
             </div>
         </div>
+
+        <div class="back-to-start-btn" id="final-back-btn" onclick="goBackToStart()">⬅ Back to Start</div>
     </div>
 
     <script>
         const startLink = document.getElementById('start-link');
         const landingScreen = document.getElementById('landing-screen');
-        const envelopeWrapper = document.getElementById('envelope-container');
+        const envelopeSection = document.getElementById('envelope-section');
+        const envelopeWrapper = document.getElementById('envelope-wrapper');
         const envelope = document.getElementById('envelope');
 
-        startLink.addEventListener('click', (e) => {
-            e.preventDefault();
+        startLink.onclick = function() {
             landingScreen.classList.add('hidden');
-            envelopeWrapper.classList.remove('hidden');
-        });
+            envelopeSection.classList.remove('hidden');
+        };
 
-        envelope.addEventListener('click', () => {
+        envelope.onclick = function() {
             envelopeWrapper.classList.add('open');
-        });
+            envelopeSection.classList.add('hide-photo'); 
+        };
+
+        function goBackToStart() {
+            // Remove the envelope section
+            envelopeSection.classList.add('hidden');
+            // Show the landing screen
+            landingScreen.classList.remove('hidden');
+            // Reset the envelope state just in case
+            envelopeWrapper.classList.remove('open');
+            envelopeSection.classList.remove('hide-photo');
+            changePage(1);
+        }
 
         function changePage(pageNum) {
-            // Remove active class from all pages
             const pages = document.querySelectorAll('.letter-page');
             pages.forEach(p => p.classList.remove('active'));
-            
-            // Activate the specific page
             const target = document.getElementById('p' + pageNum);
             if(target) target.classList.add('active');
         }
 
         function viewAll() {
-            envelopeWrapper.classList.add('full-view');
-            // Ensure all pages are visible in full view
+            envelopeSection.classList.add('full-view');
             document.querySelectorAll('.letter-page').forEach(p => p.classList.add('active'));
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function resetLetter() {
-            envelopeWrapper.classList.remove('full-view');
+            envelopeSection.classList.remove('full-view');
             envelopeWrapper.classList.remove('open');
-            // Important: Hide other pages again except page 1
+            envelopeSection.classList.remove('hide-photo'); 
             document.querySelectorAll('.letter-page').forEach(p => p.classList.remove('active'));
             document.getElementById('p1').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
